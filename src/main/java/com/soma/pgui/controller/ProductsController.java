@@ -7,13 +7,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.ParseException;
+
 @RestController
 @RequiredArgsConstructor
 public class ProductsController {
     private final ProductsService productsService;
 
     @GetMapping("/bg1")
-    public Products bg1(){
+    public Products bg1() throws ParseException {
         ProductsSaveRequestDto productsSaveRequestDto = ProductsSaveRequestDto.builder().
                 name("name1")
                 .company("company1")
