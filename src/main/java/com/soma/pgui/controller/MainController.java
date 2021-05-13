@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 
 import com.soma.pgui.service.openAPIService;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,10 @@ import org.springframework.web.util.UriBuilder;
 import java.io.UnsupportedEncodingException;
 
 @RestController
+@RequiredArgsConstructor
 public class MainController {
 
-    final openAPIService openAPIService = new openAPIService();
+    final openAPIService openAPIService;
 
     @GetMapping("/falseAds")
     public String falseAds() throws UnsupportedEncodingException {

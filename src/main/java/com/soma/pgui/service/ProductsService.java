@@ -1,23 +1,5 @@
-// package com.soma.pgui.service;
+package com.soma.pgui.service;
 
-// import com.soma.pgui.domain.products.ProductsRepository;
-// import com.soma.pgui.dto.products.ProductsSaveRequestDto;
-// import lombok.RequiredArgsConstructor;
-// import org.springframework.stereotype.Service;
-// import org.springframework.transaction.annotation.Transactional;
-
-<<<<<<< HEAD
-// @RequiredArgsConstructor
-// @Service
-// public class ProductsService {
-// private final ProductsRepository productsRepository;
-
-// @Transactional
-// public Long save(ProductsSaveRequestDto requestDto){
-// return productsRepository.save(requestDto.toEntity()).getId();
-// }
-// }
-=======
 import com.soma.pgui.domain.products.Products;
 import com.soma.pgui.domain.products.ProductsRepository;
 import com.soma.pgui.dto.products.ProductsResponseDto;
@@ -44,4 +26,4 @@ public class ProductsService {
         return new ProductsResponseDto(entity);
     }
 }
->>>>>>> main
+

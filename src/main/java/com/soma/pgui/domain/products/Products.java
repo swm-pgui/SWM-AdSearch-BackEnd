@@ -19,33 +19,47 @@ public class Products {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(nullable = false)
     private String name;
     private String company;
     private String address;
-    private Calendar disposalDate;
+    private String disposalDate;
     private String disposalCommand;
     private String violationDetail;
     private String violationStatue;
 
     @Builder
     public Products(String name, String company, String address, String disposalDate, String disposalCommand, String violationDetail, String violationStatue) throws ParseException {
+        if(name.length() > 200){
+            name = name.substring(0, 200);
+        }
         this.name = name;
+        if(company.length() > 200){
+            company = company.substring(0, 200);
+        }
         this.company = company;
+        if(address.length() > 200){
+            address = address.substring(0, 200);
+        }
         this.address = address;
+        if(violationDetail.length() > 200){
+            violationDetail = violationDetail.substring(0, 200);
+        }
         this.violationDetail = violationDetail;
-//        Calendar tmp = Calendar.getInstance();
-//        tmp.set(Integer.parseInt(disposalDate.substring(0, 4)), Integer.parseInt(disposalDate.substring(4, 6)) - 1, Integer.parseInt(disposalDate.substring(6, 8)));
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        Date date = sdf.parse(disposalDate);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        this.disposalDate = cal;
+        if(disposalDate.length() > 200){
+            disposalDate = disposalDate.substring(0, 200);
+        }
+        this.disposalDate = disposalDate;
+        if(disposalCommand.length() > 200){
+            disposalCommand = disposalCommand.substring(0, 200);
+        }
         this.disposalCommand = disposalCommand;
+        if(violationStatue.length() > 200){
+            violationStatue = violationStatue.substring(0, 200);
+        }
         this.violationStatue = violationStatue;
     }
 
-    public void update(String name, String company, String address, Calendar disposalDate, String disposalCommand,
+    public void update(String name, String company, String address, String disposalDate, String disposalCommand,
             String violationDetail, String violationStatue) {
         this.name = name;
         this.company = company;

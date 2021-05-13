@@ -8,7 +8,7 @@ public class ProductsResponseDto {
     private String name;
     private String company;
     private String address;
-    private Calendar disposalDate;
+    private String disposalDate;
     private String disposalCommand;
     private String violationDetail;
     private String violationStatue;

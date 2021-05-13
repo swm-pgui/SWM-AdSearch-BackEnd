@@ -36,7 +36,7 @@ class ProductsControllerTest {
                 .name("testName")
                 .company("testCompany")
                 .address("testAddress")
-                .disposalDate(testDate)
+//                .disposalDate(testDate)
                 .disposalCommand("testDisposalCommand")
                 .violationStatue("testViolationStatue")
                 .violationDetail("testViolationDetail")
@@ -51,7 +51,7 @@ class ProductsControllerTest {
         assertThat(testProduct.getName()).isEqualTo("testName");
         assertThat(testProduct.getCompany()).isEqualTo("testCompany");
         assertThat(testProduct.getAddress()).isEqualTo("testAddress");
-        assertThat(testProduct.getDisposalDate()).isLessThan(Calendar.getInstance());
+//        assertThat(testProduct.getDisposalDate()).isLessThan(Calendar.getInstance());
         assertThat(testProduct.getDisposalCommand()).isEqualTo("testDisposalCommand");
         assertThat(testProduct.getViolationStatue()).isEqualTo("testViolationStatue");
         assertThat(testProduct.getViolationDetail()).isEqualTo("testViolationDetail");

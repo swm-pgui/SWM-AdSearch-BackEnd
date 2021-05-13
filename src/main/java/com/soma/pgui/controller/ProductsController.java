@@ -1,3 +1,5 @@
+package com.soma.pgui.controller;
+
 import com.soma.pgui.domain.products.Products;
 import com.soma.pgui.dto.products.ProductsResponseDto;
 import com.soma.pgui.dto.products.ProductsSaveRequestDto;

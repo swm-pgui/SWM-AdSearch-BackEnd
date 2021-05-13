@@ -9,6 +9,8 @@ import java.util.Date;
 
 import com.soma.pgui.domain.products.Products;
 
+import com.soma.pgui.dto.products.ProductsSaveRequestDto;
+import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,6 +23,7 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
 
 @Service
+@RequiredArgsConstructor
 public class openAPIService {
 
   // 기본 설정들
@@ -31,6 +34,7 @@ public class openAPIService {
   private final String serviceKey = loadServiceKeyFromResource();
 
   static ArrayList<Products> products = new ArrayList<Products>();
+  private final ProductsService productsService;
 
   /// 최대 100개씩 허위광고정보를 가져와서 묶어주는 함수이다
   public String foodFalsehoodEnterpriseInformationService() throws UnsupportedEncodingException {
@@ -80,24 +84,24 @@ public class openAPIService {
           String name = jItemObject.getString("PRDUCT");
           String company = jItemObject.getString("ENTRPS");
           String address = jItemObject.getString("ADRES1");
-          String found_cn = jItemObject.getString("FOUND_CN");
           String disposalCommand = jItemObject.getString("DSPS_CMMND");
-          String violationDetail = jItemObject.getString("VIOLT");
-          // String violationStatue = jItemObject.getString("?");
-          String evidenceFile = jItemObject.getString("EVDNC_FILE");
+          String violationDetail = jItemObject.getString("FOUND_CN");
+          String violationStatue = jItemObject.getString("VIOLT");
+          String disposalDate = jItemObject.getString("DSPS_DT");
 
-          // Date String -> Date
-          String dateString = jItemObject.getString("DSPS_DT");
-          SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-          Date disposalDate = transFormat.parse(dateString);
 
-          // Date -> Calendar
-          Calendar disposalCalendar = Calendar.getInstance();
-          disposalCalendar.setTime(disposalDate);
 
-          Products product = new Products(name, company, address, disposalCalendar, disposalCommand, violationDetail,
-              null);
-          products.add(product);
+          ProductsSaveRequestDto productsSaveRequestDto = ProductsSaveRequestDto.builder()
+                  .name(name)
+                  .company(company)
+                  .address(address)
+                  .disposalCommand(disposalCommand)
+                  .disposalDate(disposalDate)
+                  .violationDetail(violationDetail)
+                  .violationStatue(violationStatue)
+                  .build();
+
+          System.out.println(productsService.save(productsSaveRequestDto));
         }
       } catch (JSONException | ParseException e1) {
         e1.printStackTrace();
@@ -107,6 +111,8 @@ public class openAPIService {
       countAddedProducts += numOfRows;
     }
     System.out.println(products.size());
+
+
     return "success";
   }
 
