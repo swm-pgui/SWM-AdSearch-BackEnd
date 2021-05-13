@@ -5,7 +5,9 @@ import com.soma.pgui.dto.products.ProductsResponseDto;
 import com.soma.pgui.dto.products.ProductsSaveRequestDto;
 import com.soma.pgui.service.ProductsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,5 +31,10 @@ public class ProductsController {
     @GetMapping("/products/{id}")
     public ProductsResponseDto findById(@RequestParam Long id) {
         return productsService.findById(id);
+    }
+
+    @GetMapping("/list/{start}/{size}")
+    public Page<Products> list(@PathVariable int start, @PathVariable int size){
+        return productsService.list(start, size);
     }
 }

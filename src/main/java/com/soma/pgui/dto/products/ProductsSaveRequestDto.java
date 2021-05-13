@@ -41,4 +41,10 @@ public class ProductsSaveRequestDto {
                 .violationStatue(violationStatue)
                 .build();
     }
+
+    @Override
+    public String toString() {
+        return "name : " + name + ", company : " + company + ", address : " + address + ", violationDetail : " + violationDetail
+                + ", disposaldate : " + disposalDate + ", disposalCommand : " + disposalCommand + ", violationStatue : " + violationStatue;
+    }
 }

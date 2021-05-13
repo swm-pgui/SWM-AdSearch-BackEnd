@@ -53,6 +53,9 @@ public class Products {
             disposalCommand = disposalCommand.substring(0, 200);
         }
         this.disposalCommand = disposalCommand;
+        if(violationStatue == null){
+            violationStatue = "abcd";
+        }
         if(violationStatue.length() > 200){
             violationStatue = violationStatue.substring(0, 200);
         }
@@ -69,5 +72,6 @@ public class Products {
         this.disposalCommand = disposalCommand;
         this.violationStatue = violationStatue;
     }
+
 
 }

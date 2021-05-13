@@ -19,18 +19,12 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
 
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 
 @RestController
 @RequiredArgsConstructor
 public class MainController {
 
     final openAPIService openAPIService;
-
-    @GetMapping("/falseAds")
-    public String falseAds() throws UnsupportedEncodingException {
-        System.out.println("getFalseAdvertisements");
-        // return openAPIService.getFalseAdvertisements();
-        return openAPIService.foodFalsehoodEnterpriseInformationService();
-    }
     
 }

@@ -5,10 +5,13 @@ import com.soma.pgui.domain.products.ProductsRepository;
 import com.soma.pgui.dto.products.ProductsResponseDto;
 import com.soma.pgui.dto.products.ProductsSaveRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
+import java.util.Collection;
 
 @RequiredArgsConstructor
 @Service
@@ -17,6 +20,7 @@ public class ProductsService {
 
     @Transactional
     public Long save(ProductsSaveRequestDto requestDto) throws ParseException {
+//        System.out.println(requestDto.toEntity().toString());
         return productsRepository.save(requestDto.toEntity()).getId();
     }
 
@@ -25,5 +29,12 @@ public class ProductsService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 상품이 없습니다 id=" + id));
         return new ProductsResponseDto(entity);
     }
+
+    public Page<Products> list(int start, int size){
+        PageRequest paging = PageRequest.of(start, size);
+        Page<Products> results = productsRepository.findAll(paging);
+        return results;
+    }
+
 }
 
