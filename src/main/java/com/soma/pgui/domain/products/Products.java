@@ -1,6 +1,5 @@
 package com.soma.pgui.domain.products;
 
-import com.soma.pgui.domain.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

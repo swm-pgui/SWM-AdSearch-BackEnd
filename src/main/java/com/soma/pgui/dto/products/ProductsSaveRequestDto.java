@@ -1,6 +1,5 @@
 package com.soma.pgui.dto.products;
 
-import com.soma.pgui.domain.posts.Posts;
 import com.soma.pgui.domain.products.Products;
 import lombok.Builder;
 import lombok.Getter;
