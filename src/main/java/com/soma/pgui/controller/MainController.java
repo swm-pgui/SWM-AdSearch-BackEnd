@@ -20,6 +20,6 @@ public class MainController {
     public String falseAds() throws UnsupportedEncodingException {
         System.out.println("getFalseAdvertisements");
         // return openAPIService.getFalseAdvertisements();
-        return openAPIService.FoodFlshdErtsInfoService();
+        return openAPIService.foodFalsehoodEnterpriseInformationService();
     }
 }
