@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.text.ParseException;
 import java.util.Calendar;
 
 @Getter
@@ -13,13 +14,13 @@ public class ProductsSaveRequestDto {
     private String name;
     private String company;
     private String address;
-    private Calendar disposalDate;
+    private String disposalDate;
     private String disposalCommand;
     private String violationDetail;
     private String violationStatue;
 
     @Builder
-    public ProductsSaveRequestDto(String name, String company, String address, Calendar disposalDate, String disposalCommand, String violationDetail, String violationStatue){
+    public ProductsSaveRequestDto(String name, String company, String address, String disposalDate, String disposalCommand, String violationDetail, String violationStatue){
         this.name = name;
         this.company = company;
         this.address = address;
@@ -29,7 +30,7 @@ public class ProductsSaveRequestDto {
         this.violationStatue = violationStatue;
     }
 
-    public Products toEntity(){
+    public Products toEntity() throws ParseException {
         return Products.builder()
                 .name(name)
                 .company(company)
