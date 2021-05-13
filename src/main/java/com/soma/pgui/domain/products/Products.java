@@ -14,7 +14,7 @@ import java.util.concurrent.CancellationException;
 @Getter
 @NoArgsConstructor
 @Entity
-public class Products{
+public class Products {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -45,7 +45,8 @@ public class Products{
         this.violationStatue = violationStatue;
     }
 
-    public void update(String name, String company, String address, Calendar disposalDate, String disposalCommand, String violationDetail, String violationStatue){
+    public void update(String name, String company, String address, Calendar disposalDate, String disposalCommand,
+            String violationDetail, String violationStatue) {
         this.name = name;
         this.company = company;
         this.address = address;
@@ -54,7 +55,5 @@ public class Products{
         this.disposalCommand = disposalCommand;
         this.violationStatue = violationStatue;
     }
-
-
 
 }
