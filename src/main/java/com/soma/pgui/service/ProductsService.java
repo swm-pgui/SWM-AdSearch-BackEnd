@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.util.Collection;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -36,5 +37,8 @@ public class ProductsService {
         return results;
     }
 
+    public List<Products> search(String query) {
+        return productsRepository.findByNameContainingOrCompanyContaining(query, query);
+    }
 }
 

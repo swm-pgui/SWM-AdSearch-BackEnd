@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.ParseException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -36,5 +37,11 @@ public class ProductsController {
     @GetMapping("/list/{start}/{size}")
     public Page<Products> list(@PathVariable int start, @PathVariable int size){
         return productsService.list(start, size);
+    }
+
+    @GetMapping("/search")
+    public List<Products> search(@RequestParam String query){
+        System.out.println(query);
+        return productsService.search(query);
     }
 }
