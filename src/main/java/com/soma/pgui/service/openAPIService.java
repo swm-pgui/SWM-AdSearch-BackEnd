@@ -1,26 +1,117 @@
 package com.soma.pgui.service;
 
 import java.io.*;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
+import com.soma.pgui.domain.products.Products;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.DefaultUriBuilderFactory;
+import org.springframework.web.util.UriBuilder;
 
 @Service
 public class openAPIService {
 
-  private final RestTemplate restTemplate = new RestTemplateBuilder().build();
-  private final String serviceKey = loadAppKey();
-  final String baseURL = "http://apis.data.go.kr/1470000/FoodFlshdErtsInfoService/getFoodFlshdErtsItem";
-  final int numberOfRows = 3;
-  final String responseType = "json";
+  // 기본 설정들
+  final int MAXIMUM_NUMBER_ROWS_PER_PAGE = 100; // 최대 100개 입니다.
+  final String responseType = "json"; // 결과를 json 으로 받아봅니다.
+  final String callUri = "http://apis.data.go.kr"; // 공공데이터 API base URI
 
-  public String loadAppKey() {
+  private final String serviceKey = loadServiceKeyFromResource();
+
+  static ArrayList<Products> products = new ArrayList<Products>();
+
+  /// 최대 100개씩 허위광고정보를 가져와서 묶어주는 함수이다
+  public String foodFalsehoodEnterpriseInformationService() throws UnsupportedEncodingException {
+
+    RestTemplate restTemplate = new RestTemplateBuilder().build();
+
+    DefaultUriBuilderFactory uriBuilderFactory = new DefaultUriBuilderFactory(callUri);
+    uriBuilderFactory.setEncodingMode(DefaultUriBuilderFactory.EncodingMode.NONE);
+
+    int currentPageNumber = 1;
+
+    int countAddedProducts = 0;
+    int countTotalProducts = -1;
+    while (countAddedProducts == 0 || (countAddedProducts < countTotalProducts)) {
+
+      UriBuilder uriBuilder = uriBuilderFactory.builder();
+      uriBuilder.path("/1470000/FoodFlshdErtsInfoService/getFoodFlshdErtsItem").queryParam("ServiceKey", serviceKey)
+          .queryParam("pageNo", Integer.toString(currentPageNumber))
+          .queryParam("numOfRows", Integer.toString(MAXIMUM_NUMBER_ROWS_PER_PAGE)).queryParam("type", "json");
+
+      // send request 요청 전송, 응답 수신
+      ResponseEntity responseEntity = restTemplate.exchange(uriBuilder.build(), HttpMethod.GET, null, String.class);
+      String responseString = (String) responseEntity.getBody();
+
+      // parsing response
+      int numOfRows = MAXIMUM_NUMBER_ROWS_PER_PAGE;
+      try {
+        JSONObject jObject = new JSONObject(responseString);
+        JSONObject jHeadObject = jObject.getJSONObject("header");
+        JSONObject jBodyObject = jObject.getJSONObject("body");
+
+        // parsing body
+        int pageRequested = jBodyObject.getInt("pageNo");
+        int totalCount = jBodyObject.getInt("totalCount");
+        numOfRows = jBodyObject.getInt("numOfRows");
+
+        if (countTotalProducts == -1) {
+          countTotalProducts = totalCount;
+          System.out.println("countTotalProducts set to : " + countTotalProducts);
+        }
+
+        JSONArray jItemsArray = jBodyObject.getJSONArray("items");
+
+        for (int i = 0; i < jItemsArray.length(); i++) {
+          JSONObject jItemObject = jItemsArray.getJSONObject(i);
+
+          String name = jItemObject.getString("PRDUCT");
+          String company = jItemObject.getString("ENTRPS");
+          String address = jItemObject.getString("ADRES1");
+          String found_cn = jItemObject.getString("FOUND_CN");
+          String disposalCommand = jItemObject.getString("DSPS_CMMND");
+          String violationDetail = jItemObject.getString("VIOLT");
+          // String violationStatue = jItemObject.getString("?");
+          String evidenceFile = jItemObject.getString("EVDNC_FILE");
+
+          // Date String -> Date
+          String dateString = jItemObject.getString("DSPS_DT");
+          SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+          Date disposalDate = transFormat.parse(dateString);
+
+          // Date -> Calendar
+          Calendar disposalCalendar = Calendar.getInstance();
+          disposalCalendar.setTime(disposalDate);
+
+          Products product = new Products(name, company, address, disposalCalendar, disposalCommand, violationDetail,
+              null);
+          products.add(product);
+        }
+      } catch (JSONException | ParseException e1) {
+        e1.printStackTrace();
+      }
+
+      currentPageNumber += 1;
+      countAddedProducts += numOfRows;
+    }
+    System.out.println(products.size());
+    return "success";
+  }
+
+  // utility
+  public String loadServiceKeyFromResource() {
     System.out.println("loading App Key");
     String filePath = new File("").getAbsolutePath();
     filePath = filePath + "/src/main/resources/appKey";
@@ -34,96 +125,5 @@ public class openAPIService {
       e.printStackTrace();
     }
     return "";
-  }
-
-  public String getPostsPlainJSON() {
-    String url = "https://jsonplaceholder.typicode.com/posts";
-    return this.restTemplate.getForObject(url, String.class);
-  }
-
-  public String singleParameter() {
-    String url = "https://jsonplaceholder.typicode.com/posts?userId=3";
-    int userId = 3;
-    return this.restTemplate.getForObject(url, String.class);
-  }
-
-  public String multipleParameters() {
-    String url = "https://jsonplaceholder.typicode.com/posts/{id}{userId}";
-    return this.restTemplate.getForObject(url, String.class, 2, 3);
-  }
-
-  public String getFalseAdvertisements() {
-    int currentPageNumber = 1;
-    int pageNumber = 1;
-    String responseString = "";
-    try {
-      StringBuilder urlBuilder = new StringBuilder(baseURL);
-      System.out.println(serviceKey);
-      String serviceKeyDecoded = URLDecoder.decode(serviceKey, "UTF-8");
-      System.out.println(serviceKeyDecoded);
-      urlBuilder.append("?" + URLEncoder.encode("ServiceKey", "UTF-8") + "=" + URLEncoder.encode(serviceKey, "UTF-8"));
-      urlBuilder.append("&" + URLEncoder.encode("pageNo", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8")); // pageNumber
-      urlBuilder.append("&" + URLEncoder.encode("numberOfRows", "UTF-8") + "=" + URLEncoder.encode("10", "UTF-8")); // numberOfRows
-      urlBuilder.append("&" + URLEncoder.encode("type", "UTF-8") + "=" + URLEncoder.encode("json", "UTF-8")); // responseType
-      responseString = this.restTemplate.getForObject(urlBuilder.toString(), String.class);
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
-    // url appending
-    // String url = baseURL;
-    // // url += "?ServiceKey=\"" + serviceKey.trim() + "\"";
-    // url += "?ServiceKey=" + serviceKeyDecoded;
-    // url += "&" + "numberOfRows=" + numberOfRows;
-    // url += "&" + "pageNo=" + pageNumber;
-    // url += "&" + "type=" + responseType;
-    // System.out.println("url: " + url);
-    // String responseString = this.restTemplate.getForObject(url, String.class);
-    // , serviceKey, pageNumber, numberOfRows,
-    // responseType);
-    // String toReturn = "";
-    System.out.println(responseString);
-    // parsing
-    JSONArray jArray;
-    try {
-      JSONObject jObject = new JSONObject(responseString);
-      JSONObject jHeadObject = jObject.getJSONObject("header");
-      JSONObject jBodyObject = jObject.getJSONObject("body");
-
-      // parsing body
-      int pageRequested = jBodyObject.getInt("pageNo");
-      int totalCount = jBodyObject.getInt("totalCount");
-      int numOfRows = jBodyObject.getInt("numOfRows");
-
-      JSONObject jPageNoObject = jObject.getJSONObject("body");
-      JSONArray jItemsArray = jBodyObject.getJSONArray("items");
-
-      for (int i = 0; i < jItemsArray.length(); i++) {
-        JSONObject jItemObject = jItemsArray.getJSONObject(i);
-
-        String name = jItemObject.getString("PRDUCT");
-        String company = jItemObject.getString("ENTRPS");
-        String address = jItemObject.getString("ADRES1");
-        // String found_cn = jItemObject.getString("FOUND_CN");
-        String disposalDate = jItemObject.getString("DSPS_DT");
-        String disposalCommnand = jItemObject.getString("DSPS_CMMND");
-        String violationDetail = jItemObject.getString("VIOLT");
-        // String violationStatue = jItemObject.getString("?");
-        String evidenceFile = jItemObject.getString("EVDNC_FILE");
-
-        // System.out.println("PRDUCT: " + found_cn);
-        // System.out.println("ENTRPS: " + entrps);
-        // System.out.println("ADRES1: " + adres1);
-        // System.out.println("FOUND_CN: " + found_cn);
-        // System.out.println("DSPS_DT: " + dsps_dt);
-        // System.out.println("DSPS_CMMND: " + dsps_cmmnd);
-        // System.out.println("VIOLT: " + violt);
-        // System.out.println("EVDNC_FILE: " + evdnc_file);
-        // System.out.println("");
-      }
-    } catch (JSONException e1) {
-      e1.printStackTrace();
-    }
-    return "Success. Check-Out Debug Console";
   }
 }
