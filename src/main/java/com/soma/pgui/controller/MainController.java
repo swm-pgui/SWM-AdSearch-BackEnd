@@ -68,4 +68,6 @@ public class MainController {
         // return openAPIService.getFalseAdvertisements();
         return openAPIService.getFalseAdvertisements().toString();
     }
+
 }
+
