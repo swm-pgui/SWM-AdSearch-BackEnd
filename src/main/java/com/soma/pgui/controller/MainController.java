@@ -1,6 +1,5 @@
 package com.soma.pgui.controller;
 
-import com.soma.pgui.model.FalseAdItem;
 import com.soma.pgui.service.openAPIService;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,8 +64,7 @@ public class MainController {
     @GetMapping("/falseAds")
     public String falseAds() {
         System.out.println("falseAds");
-        // return openAPIService.getFalseAdvertisements();
-        return openAPIService.getFalseAdvertisements().toString();
+        return openAPIService.getFalseAdvertisements();
     }
 
 }
