@@ -49,5 +49,3 @@ maven빌드 툴을 이용한 Springboot Dependency build
 |------|---|---|
 |/list/start/size|GET|허위광고 적발 업체들의 리스트를 출력한다. start페이지에서 size개수 만큼의 개체를 반환한다. |
 |/search|GET|검색어(query)를 입력하면 업체명, 제품명에서 비슷하거나 일치하는 값의 개체를 반환한다.<br>variable) query : 검색값. |
-
-
