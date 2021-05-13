@@ -30,7 +30,7 @@
 
 `박경호` OpenAPI를 이용해 Json형태의 데이터 파싱  
 `박승현` DB 스키마에 맞게 OpenAPI데이터 가공  
-`신봉근` aws ec2, rds를 이용하여 인프라 구축, domain 설계 및 구현
+`신봉근` aws ec2, rds를 이용하여 인프라 구축, domain 설계 및 구현   
 `이창하` Controller작성 및 구현  
 
 저희팀의 프론트 엔드가 궁금하신가요? 👉🏻 [SWM-AdSearch-FrontEnd](https://github.com/swm-pgui/SWM-AdSearch-FrontEnd)
